@@ -21,6 +21,7 @@ Fork of MoneyPrinterTurbo extended with a UGC creation pipeline.
 - `/analyze-style` — Build style profile from downloaded videos
 - `/enhance video.mp4` — Full pipeline: captions → b-roll → music → publish
 - `/generate "topic"` — Generate video from scratch using MPT pipeline
+- /write-script "topic"
 - `/scout` — Discover viral accounts in your niche
 - `/account add/use/list` — Manage TikTok accounts
 - `/repurpose-linkedin` — Convert TikTok videos into LinkedIn posts

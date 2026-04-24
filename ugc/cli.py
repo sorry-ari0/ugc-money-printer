@@ -10,6 +10,7 @@ from ugc.publisher.ayrshare import AyrsharePublisher
 from ugc.scout.viral import ViralScout
 from ugc.llm import LLMRouter
 from ugc.repurposer.linkedin import LinkedInRepurposer
+from ugc.scriptwriter.writer import ScriptWriter
 
 
 class CLI:
@@ -168,3 +169,15 @@ class CLI:
         LinkedInRepurposer.save_posts(posts, output_path)
         logger.success(f"Generated {len(posts)} LinkedIn posts for @{handle}")
         return posts
+
+    def write_script(self, prompt: str, handle: str = "", duration: int = 60) -> dict:
+        handle = handle or self.config.active_account
+        writer = ScriptWriter()
+        accts_dir = os.path.join(self.config.root_dir, "storage", "accounts")
+        script = writer.write_script_for_creator(prompt, handle, accts_dir, self.llm, duration)
+        from datetime import datetime
+        scripts_dir = os.path.join(self.config.account_dir(handle), "scripts")
+        script_path = os.path.join(scripts_dir, f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+        ScriptWriter.save_script(script, script_path)
+        logger.success(f"Script saved to {script_path}")
+        return script

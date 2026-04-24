@@ -12,6 +12,8 @@ from ugc.llm import LLMRouter
 from ugc.repurposer.linkedin import LinkedInRepurposer
 from ugc.scriptwriter.writer import ScriptWriter
 from ugc.avatar.seedance import SeedanceAvatar, SeedanceOptions
+from ugc.avatar.tts import EdgeTTSGenerator
+from ugc.avatar.sadtalker import SadTalkerGenerator
 
 
 class CLI:
@@ -235,4 +237,44 @@ class CLI:
         result = avatar.generate_avatar_video(script, reference_image_url, output_dir, opts)
 
         logger.success(f"Avatar video generated: {result.get('video_path', '')}")
+        return result
+
+    def generate_avatar_local(self, script: dict = None, script_path: str = "",
+                              handle: str = "", reference_image: str = "",
+                              voice: str = "") -> dict:
+        """Generate avatar video locally using Edge TTS + SadTalker (free, no API key)."""
+        handle = handle or self.config.active_account
+
+        if script is None and script_path:
+            import json
+            with open(script_path, encoding="utf-8") as f:
+                script = json.load(f)
+        if script is None:
+            logger.error("Provide a script dict or script_path")
+            return {}
+
+        if not reference_image:
+            import glob
+            videos_dir = self.config.videos_dir(handle)
+            vids = sorted(glob.glob(os.path.join(videos_dir, "*.mp4")))
+            if vids:
+                from ugc.avatar.seedance import SeedanceAvatar
+                av = SeedanceAvatar.__new__(SeedanceAvatar)
+                frame_dir = os.path.join(self.config.account_dir(handle), "frames")
+                reference_image = av.extract_reference_frame(vids[0],
+                    os.path.join(frame_dir, "reference.png"))
+            else:
+                logger.error("No reference image or videos found. Download TikToks first.")
+                return {}
+
+        output_dir = os.path.join(self.config.account_dir(handle), "avatar_output")
+        tts_dir = os.path.join(output_dir, "tts_audio")
+
+        tts = EdgeTTSGenerator(voice=voice)
+        sections = tts.generate_sections(script, tts_dir)
+
+        talker = SadTalkerGenerator()
+        result = talker.generate_from_script(sections, reference_image, output_dir)
+
+        logger.success(f"Local avatar video generated: {result.get('video_path', '')}")
         return result

@@ -11,7 +11,7 @@ Fork of MoneyPrinterTurbo extended with a UGC creation pipeline.
 ## Architecture
 
 - `app/` — Original MPT (do not modify)
-- `ugc/` — UGC layer (downloader, analyzer, enhancer, captioner, publisher, scout)
+- `ugc/` — UGC layer (downloader, analyzer, enhancer, captioner, publisher, scout, avatar)
 - `.claude/commands/` — Claude Code slash commands
 - `storage/accounts/` — Per-account data (videos, style profiles, scout data)
 
@@ -21,7 +21,8 @@ Fork of MoneyPrinterTurbo extended with a UGC creation pipeline.
 - `/analyze-style` — Build style profile from downloaded videos
 - `/enhance video.mp4` — Full pipeline: captions → b-roll → music → publish
 - `/generate "topic"` — Generate video from scratch using MPT pipeline
-- /write-script "topic"
+- `/write-script "topic"` — Generate a video script in a creator's style
+- `/generate-avatar` — Generate AI talking-head video via Seedance 2.0
 - `/scout` — Discover viral accounts in your niche
 - `/account add/use/list` — Manage TikTok accounts
 - `/repurpose-linkedin` — Convert TikTok videos into LinkedIn posts
@@ -34,6 +35,7 @@ Fork of MoneyPrinterTurbo extended with a UGC creation pipeline.
 
 All UGC settings are in `config.toml` under `[ugc]`. API keys:
 - `[ugc.llm]` — Anthropic API key
+- `[ugc.avatar]` — fal.ai API key (Seedance 2.0)
 - `[ugc.publish]` — Ayrshare API key
 
 ## Tests

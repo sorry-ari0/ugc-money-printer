@@ -22,6 +22,9 @@ class UGCConfig:
         self.llm_fallback_model: str = llm.get("fallback_model", "llama-agent:latest")
         self.anthropic_api_key: str = llm.get("anthropic_api_key", "")
 
+        avatar = raw.get("avatar", {})
+        self.fal_api_key: str = avatar.get("fal_api_key", "")
+
         enhance = raw.get("enhance", {})
         self.caption_style: str = enhance.get("default_caption_style", "word-pop")
         self.default_music: bool = enhance.get("default_music", True)

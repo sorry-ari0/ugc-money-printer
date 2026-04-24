@@ -275,6 +275,11 @@ fallback = "ollama"
 fallback_model = "llama-agent:latest"
 anthropic_api_key = ""
 
+[ugc.avatar]
+# fal.ai API key for Seedance 2.0 avatar generation
+# Get your key at https://fal.ai/dashboard/keys
+fal_api_key = ""
+
 [ugc.enhance]
 default_caption_style = "word-pop"
 default_music = true

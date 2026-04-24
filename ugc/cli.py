@@ -11,6 +11,7 @@ from ugc.scout.viral import ViralScout
 from ugc.llm import LLMRouter
 from ugc.repurposer.linkedin import LinkedInRepurposer
 from ugc.scriptwriter.writer import ScriptWriter
+from ugc.avatar.seedance import SeedanceAvatar, SeedanceOptions
 
 
 class CLI:
@@ -181,3 +182,57 @@ class CLI:
         ScriptWriter.save_script(script, script_path)
         logger.success(f"Script saved to {script_path}")
         return script
+
+    def generate_avatar(self, script: dict = None, script_path: str = "",
+                        handle: str = "", reference_video: str = "",
+                        reference_image_url: str = "",
+                        resolution: str = "720p", fast: bool = False) -> dict:
+        handle = handle or self.config.active_account
+
+        if script is None and script_path:
+            import json
+            with open(script_path, encoding="utf-8") as f:
+                script = json.load(f)
+        if script is None:
+            logger.error("Provide a script dict or script_path")
+            return {}
+
+        if not reference_image_url and reference_video:
+            avatar = SeedanceAvatar(self.config.fal_api_key)
+            frame_dir = os.path.join(self.config.account_dir(handle), "frames")
+            frame_path = avatar.extract_reference_frame(reference_video,
+                os.path.join(frame_dir, "reference.png"))
+            logger.info(f"Extracted reference frame: {frame_path}")
+            logger.warning(
+                "Seedance 2.0 may block real face uploads. "
+                "If generation fails, provide an AI-generated portrait URL instead."
+            )
+            reference_image_url = frame_path
+
+        if not reference_image_url:
+            videos_dir = self.config.videos_dir(handle)
+            import glob
+            vids = sorted(glob.glob(os.path.join(videos_dir, "*.mp4")))
+            if vids:
+                avatar = SeedanceAvatar(self.config.fal_api_key)
+                frame_dir = os.path.join(self.config.account_dir(handle), "frames")
+                frame_path = avatar.extract_reference_frame(vids[0],
+                    os.path.join(frame_dir, "reference.png"))
+                reference_image_url = frame_path
+                logger.info(f"Auto-extracted reference from {vids[0]}")
+            else:
+                logger.error("No reference image or videos found. Download TikToks first.")
+                return {}
+
+        avatar = SeedanceAvatar(self.config.fal_api_key)
+        opts = SeedanceOptions(
+            resolution=resolution,
+            aspect_ratio="9:16",
+            fast=fast,
+        )
+
+        output_dir = os.path.join(self.config.account_dir(handle), "avatar_output")
+        result = avatar.generate_avatar_video(script, reference_image_url, output_dir, opts)
+
+        logger.success(f"Avatar video generated: {result.get('video_path', '')}")
+        return result

@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "ffmpeg-mcp-lite": {
+      "command": "python",
+      "args": ["-m", "ffmpeg_mcp_lite"],
+      "env": {}
+    },
+    "pixa": {
+      "command": "npx",
+      "args": ["-y", "pixa-mcp"],
+      "env": {
+        "PIXA_API_KEY": ""
+      }
+    },
+    "ayrshare": {
+      "command": "npx",
+      "args": ["-y", "ayrshare-mcp"],
+      "env": {
+        "AYRSHARE_API_KEY": ""
+      }
+    }
+  }
+}

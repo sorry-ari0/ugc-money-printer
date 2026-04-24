@@ -17,3 +17,10 @@ pyyaml==6.0.3
 requests==2.33.1
 socksio==1.0.0
 pydub==0.25.1
+
+# UGC Pipeline
+yt-dlp>=2024.12.0
+whisperx>=3.1.0
+anthropic>=0.40.0
+ollama>=0.4.0
+ayrshare>=2.0.0

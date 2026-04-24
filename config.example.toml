@@ -261,3 +261,30 @@ upload_post_platforms = ["tiktok", "instagram"]
 
 # Automatically cross-post videos after generation (if false, you'll need to call the API manually)
 upload_post_auto_upload = false
+
+########## UGC Pipeline Settings ##########
+
+[ugc]
+active_account = "ari.from.jelly"
+output_dir = "storage/output"
+
+[ugc.llm]
+primary = "anthropic"
+primary_model = "claude-sonnet-4-6"
+fallback = "ollama"
+fallback_model = "llama-agent:latest"
+anthropic_api_key = ""
+
+[ugc.enhance]
+default_caption_style = "word-pop"
+default_music = true
+silence_trim = true
+auto_publish = false
+
+[ugc.publish]
+platforms = ["tiktok", "instagram", "youtube", "twitter", "linkedin"]
+ayrshare_api_key = ""
+
+[ugc.scout]
+max_accounts = 20
+refresh_interval_hours = 168

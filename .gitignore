@@ -28,8 +28,18 @@ venv/
 .venv
 
 # Debug and test files
-CLAUDE.md
 debug/
 debug_*.py
 test_*.py
 streamlit.log
+
+# UGC storage (downloaded videos, generated content)
+storage/accounts/*/videos/
+storage/accounts/*/assets/
+storage/accounts/*/scouts/viral_posts/
+storage/accounts/*/scouts/hooks_library/
+storage/output/
+
+# Keep structure files
+!storage/accounts/accounts.json
+!storage/accounts/*/metadata.json

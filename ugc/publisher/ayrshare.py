@@ -73,6 +73,11 @@ class AyrsharePublisher:
         if schedule:
             payload["scheduleDate"] = schedule
 
+        if requests is None:
+            logger.error("requests package not installed. Install: pip install requests")
+            return [PostResult(platform=p, success=False, error="requests not installed")
+                    for p in mapped]
+
         try:
             resp = requests.post(
                 f"{self.API_URL}/post",

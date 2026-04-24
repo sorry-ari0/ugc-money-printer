@@ -14,7 +14,7 @@ class ScriptWriter:
             if "hashtags" in style_hints:
                 top = style_hints["hashtags"].get("top_tags", [])[:10]
                 if top:
-                    tags = ", ".join(f"#{t[0]}" for t in top)
+                    tags = ", ".join(f"#{t}" for t in top)
                     style_context += f"Common hashtags: {tags}. "
             if "engagement" in style_hints:
                 eng = style_hints["engagement"]

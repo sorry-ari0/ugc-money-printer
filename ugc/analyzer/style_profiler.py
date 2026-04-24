@@ -54,7 +54,7 @@ class StyleProfiler:
         return {
             "pacing": StyleProfiler.analyze_pacing(videos_meta),
             "hashtags": StyleProfiler.analyze_hashtags(videos_meta),
-            "content": StyleProfiler.analyze_engagement(videos_meta),
+            "engagement": StyleProfiler.analyze_engagement(videos_meta),
             "video_count": len(videos_meta),
         }
 

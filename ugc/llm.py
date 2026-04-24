@@ -38,6 +38,8 @@ class LLMRouter:
         except Exception as e:
             logger.warning(f"{provider} failed: {e}, trying fallback")
             if provider != self.fallback:
+                if self.fallback == "anthropic":
+                    return self._chat_anthropic(prompt, system, self.fallback_model)
                 return self._chat_ollama(prompt, system, self.fallback_model)
             raise
 

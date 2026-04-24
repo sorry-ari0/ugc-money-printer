@@ -1,5 +1,4 @@
 import os
-import subprocess
 from dataclasses import dataclass
 from typing import Optional
 from loguru import logger
@@ -140,3 +139,20 @@ class WhisperXCaptioner:
                 )
 
         return header + "\n".join(events) + "\n"
+
+    def transcribe_and_save(self, video_path: str, output_dir: str,
+                            style: str = "word-pop") -> dict:
+        segments = self.transcribe(video_path)
+        base = os.path.splitext(os.path.basename(video_path))[0]
+        os.makedirs(output_dir, exist_ok=True)
+
+        srt_path = os.path.join(output_dir, f"{base}.srt")
+        with open(srt_path, "w", encoding="utf-8") as f:
+            f.write(self.format_srt(segments))
+
+        ass_path = os.path.join(output_dir, f"{base}.ass")
+        with open(ass_path, "w", encoding="utf-8") as f:
+            f.write(self.format_ass(segments, style=style))
+
+        transcript = " ".join(s.word for s in segments)
+        return {"srt": srt_path, "ass": ass_path, "transcript": transcript}
